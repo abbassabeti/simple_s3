@@ -59,9 +59,6 @@ public class SwiftSimpleS3Plugin: NSObject, FlutterPlugin {
 
             let credentialsProvider = AWSCognitoCredentialsProvider(regionType: parsedRegion(), identityPoolId: poolID as! String)
 
-            credentialsProvider.clearKeychain()
-            //credentialsProvider.getIdentityId()
-
             let configuration = AWSServiceConfiguration(region: parsedSubRegion(), credentialsProvider: credentialsProvider)
 
             AWSServiceManager.default().defaultServiceConfiguration = configuration
@@ -119,6 +116,8 @@ public class SwiftSimpleS3Plugin: NSObject, FlutterPlugin {
             let transferManager = AWSS3TransferManager.default()
             transferManager.upload(uploadRequest).continueWith { (task) -> AnyObject? in
                 if let error = task.error as NSError? {
+                    credentialsProvider.clearKeychain()
+                    credentialsProvider.getIdentityId()
                     if error.domain == AWSS3TransferManagerErrorDomain as String {
                         if let errorCode = AWSS3TransferManagerErrorType(rawValue: error.code) {
                             switch (errorCode) {
