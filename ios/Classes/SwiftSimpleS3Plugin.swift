@@ -57,8 +57,11 @@ public class SwiftSimpleS3Plugin: NSObject, FlutterPlugin {
             var acl = AWSS3ObjectCannedACL.unknown
             let acs = accessControl as! Int
 
-
             let credentialsProvider = AWSCognitoCredentialsProvider(regionType: parsedRegion(), identityPoolId: poolID as! String)
+
+            credentialsProvider.clearKeychain()
+            credentialsProvider.getIdentityId()
+
             let configuration = AWSServiceConfiguration(region: parsedSubRegion(), credentialsProvider: credentialsProvider)
 
             AWSServiceManager.default().defaultServiceConfiguration = configuration
